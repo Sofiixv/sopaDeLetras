@@ -30,7 +30,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         int eleccion = menuPalabra();
-        recorrerVertical(eleccion);
+        recorrerSopa(eleccion);
 
     }
 
@@ -48,11 +48,14 @@ public class App {
         return palabraElegida;
     }
 
-    public static void recorrerVertical(int palabraElegida) {
+    public static void recorrerSopa(int palabraElegida) {
         String palabraEleccion = palabras[palabraElegida];
         boolean palabraEncontrada = false;
         boolean palabraMostrada = false;
         String palabraConcatencada = "";
+        boolean vertical = false;
+        boolean horizontal = false;
+        boolean diagonal = false;
         int contadorPalabra = 0;
 
         String primeraLetra = String.valueOf(palabraEleccion.charAt(0));
@@ -61,12 +64,11 @@ public class App {
         for (int i = 0; i < sopa.length; i++) { // estas son las filas
             System.out.println("");
             for (int K = 0; K < 18; K++) { // estas son las columnas
-               if (18-K >= palabraEleccion.length()) {
-                
+                if (18 - K >= palabraEleccion.length()) {
+
                     if (!palabraMostrada) {
                         if (primeraLetra.equals(sopa[i][K])) {
-                            for (int j = K; contadorPalabra < palabraEleccion.length(); j++) { // mirar si la j tiene que
-                                                                                            // empezar en 0 o en 1
+                            for (int j = K; contadorPalabra < palabraEleccion.length(); j++) {
                                 contadorPalabra++;
                                 palabraConcatencada += sopa[i][j];
                             }
@@ -74,25 +76,81 @@ public class App {
                             contadorPalabra = 0;
                             if (palabraConcatencada.equals(palabraEleccion)) {
                                 palabraEncontrada = true;
+                                horizontal = true;
                                 if (palabraEncontrada) {
                                     for (int l = K; contadorPalabra < palabraConcatencada.length(); l++) {
                                         contadorPalabra++;
-                                        System.out.print(red + sopa[i][l] + " ");
-                                        K++;
+                                        sopa[i][l]=red+sopa[i][l];
+                                        //System.out.print(red + sopa[i][l] + " ");
+                                        
                                     }
                                     // K+=palabraConcatencada.length();
                                     palabraMostrada = true;
                                 }
-                            } else {
-                                palabraConcatencada = "";
+                            } 
+                            
+                            
+                             else if (12 - i >= palabraEleccion.length()) {
+
+                                if (!horizontal) { // algoritmo para buscar vertical
+                                    palabraConcatencada = "";
+                                    contadorPalabra = 0;
+                                    for (int j = i; contadorPalabra < palabraEleccion.length(); j++) {
+                                        contadorPalabra++;
+                                        palabraConcatencada += sopa[j][K];
+
+                                    }
+
+                                    contadorPalabra = 0;
+                                    if (palabraConcatencada.equals(palabraEleccion)) {
+                                        palabraEncontrada = true;
+                                        vertical = true;
+                                        palabraMostrada = true;
+                                        for (int j = i; contadorPalabra < palabraConcatencada.length(); j++) {
+                                            contadorPalabra++;
+                                            sopa[j][K] = red + sopa[j][K];
+
+                                        }
+
+                                    } else {
+                                        palabraConcatencada = "";
+                                    }
+                                }
+                                if (!diagonal) {
+                                    palabraConcatencada = "";
+                                    contadorPalabra = 0;
+                                    int saltoLetraDerecha = K;
+                                    for (int j = i; contadorPalabra < palabraEleccion.length(); j++) {
+                                        contadorPalabra++;
+                                        palabraConcatencada += sopa[j][saltoLetraDerecha];
+                                        saltoLetraDerecha++;
+
+                                    }
+
+                                    contadorPalabra = 0;
+                                    if (palabraConcatencada.equals(palabraEleccion)) {
+                                        palabraEncontrada = true;
+                                        palabraMostrada = true;
+                                        saltoLetraDerecha = K;
+                                        for (int j = i; contadorPalabra < palabraConcatencada.length(); j++) {
+                                            contadorPalabra++;
+                                            sopa[j][saltoLetraDerecha] = red + sopa[j][saltoLetraDerecha];
+                                            saltoLetraDerecha++;
+                                        }
+
+                                    } else {
+                                        palabraConcatencada = "";
+                                    }
+
+                                }
                             }
 
                         }
-
+                        else {
+                            palabraConcatencada="";
+                        }
                     }
-                } 
-
-
+                }
 
                 System.out.print(white + sopa[i][K] + " ");
 
